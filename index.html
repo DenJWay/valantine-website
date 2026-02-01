@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine Surprise 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#ff4d6d,#ffb3c6,#fff);color:#fff;overflow:hidden}
+.page{display:none;height:100vh;justify-content:center;align-items:center;text-align:center;flex-direction:column;padding:20px;animation:fade 0.8s}
+.page.active{display:flex}
+h1{font-family:'Great Vibes',cursive;font-size:3.2rem;margin-bottom:20px}
+p{font-size:1.1rem;margin-bottom:20px;max-width:500px}
+.btn{padding:12px 30px;border-radius:30px;border:none;margin:10px;font-size:1rem;cursor:pointer}
+.yes{background:#fff;color:#ff4d6d}
+.no{background:#ff4d6d;color:#fff}
+@keyframes fade{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.heart{position:absolute;width:20px;height:20px;background:pink;transform:rotate(45deg);animation:float 6s linear infinite;opacity:0.8}
+.heart::before,.heart::after{content:"";position:absolute;width:20px;height:20px;background:pink;border-radius:50%}
+.heart::before{top:-10px;left:0}.heart::after{left:-10px;top:0}
+@keyframes float{0%{transform:translateY(100vh) rotate(45deg)}100%{transform:translateY(-10vh) rotate(45deg);opacity:0}}
+.option{background:#fff;color:#ff4d6d;padding:10px 20px;border-radius:20px;margin:8px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="page active" id="p1">
+<h1>Will you be mine? 💖</h1>
+<button class="btn yes" id="yesBtn" onclick="go('p2')">Yes 💖</button>
+<button class="btn no" id="noBtn" onclick="noClick()">No 💔</button>
+</div>
+
+<!-- THINK AGAIN -->
+<div class="page" id="think">
+<h1>Think again… 🧸😢</h1>
+<button class="btn yes" onclick="go('p1')">Go Back</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p2">
+<h1>Happy Valentine Baby 💖</h1>
+<p>You make my world brighter, warmer, and full of love.</p>
+<button class="btn yes" onclick="go('p3')">See Your Gifts 🎁</button>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="p3">
+<h1>Something for You 🎁</h1>
+<button class="btn yes" onclick="go('quiz')">Gift 1 💝</button>
+<button class="btn yes" onclick="go('letter')">Gift 2 💌</button>
+<button class="btn yes" onclick="go('promise')">Gift 3 💖</button>
+</div>
+
+<!-- QUIZ -->
+<div class="page" id="quiz">
+<h1>Quick Love Quiz 💕</h1>
+<p id="qText"></p>
+<div id="options"></div>
+<p id="feedback"></p>
+</div>
+
+<!-- PASSED -->
+<div class="page" id="passed">
+<h1>You passed! 💖</h1>
+<p>You really love me 😘</p>
+<button class="btn yes" onclick="go('p3')">Back</button>
+</div>
+
+<!-- LETTER -->
+<div class="page" id="letter">
+<h1 style="font-family:'Great Vibes',cursive;">My Love Letter 💌</h1>
+<p style="font-family:'Great Vibes',cursive;font-size:1.4rem;line-height:1.8;">
+My dearest love,<br><br>
+Every moment with you feels like a gentle melody that plays in my heart.<br>
+You are my laughter in the quiet, my comfort in the storm, and my dream in every sunrise.<br>
+When I look into your eyes, I see a future filled with warmth, trust, and endless affection.<br>
+No words can capture the depth of my feelings, but I promise to cherish you today, tomorrow, and forever.<br>
+You are not just my Valentine—you are my reason, my hope, and my forever home.<br><br>
+Always yours 💖
+</p>
+<button class="btn yes" onclick="go('p3')">Back</button>
+</div>
+
+<!-- PROMISE -->
+<div class="page" id="promise">
+<h1>Always stay with me 💖</h1>
+<h1>I love you forever 💞</h1>
+<button class="btn yes" onclick="go('p3')">Back</button>
+</div>
+
+<script>
+let noCount = 0;
+function go(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function noClick() {
+  noCount++;
+  if (noCount === 1) go('think');
+  if (noCount === 2) document.getElementById('yesBtn').style.transform = 'scale(1.3)';
+  if (noCount >= 3) {
+    document.getElementById('noBtn').style.display = 'none';
+    document.getElementById('yesBtn').style.transform = 'scale(1.6)';
+  }
+}
+
+const quiz = [
+  { q: 'Who is boss in relationship?', a: ['Me', 'My Mom', 'Obviously You'], c: 2 },
+  { q: 'Who fights a lot in relationship?', a: ['Always You', 'No One', 'Me'], c: 2 },
+  { q: 'Where do I plan to spend rest of my life?', a: ['Paris', 'In Your Heart', 'On Mars'], c: 1 }
+];
+
+let qi = 0;
+
+function startQuiz() {
+  qi = 0;
+  go('quiz');
+  loadQ();
+}
+
+function loadQ() {
+  if (qi >= quiz.length) {
+    go('passed');
+    return;
+  }
+
+  document.getElementById('qText').innerText = quiz[qi].q;
+  const opt = document.getElementById('options');
+  const feedback = document.getElementById('feedback');
+  opt.innerHTML = '';
+  feedback.innerText = '';
+
+  quiz[qi].a.forEach((text, i) => {
+    const d = document.createElement('div');
+    d.className = 'option';
+    d.innerText = text;
+    d.onclick = (e) => {
+      e.stopPropagation();
+      if (i === quiz[qi].c) {
+        feedback.innerText = "Correct, you're smart!";
+        setTimeout(() => {
+          qi++;
+          loadQ();
+        }, 600);
+      } else {
+        feedback.innerText = "No, that's wrong.";
+      }
+    };
+    opt.appendChild(d);
+  });
+}
+
+// override Gift 1 button safely after DOM load
+window.addEventListener('DOMContentLoaded', () => {
+  const gift1Btn = document.querySelector("button[onclick=\"go('quiz')\"]");
+  if (gift1Btn) {
+    gift1Btn.onclick = startQuiz;
+  }
+});
+
+// floating hearts
+setInterval(() => {
+  const h = document.createElement('div');
+  h.className = 'heart';
+  h.style.left = Math.random() * 100 + 'vw';
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 6000);
+}, 300);
+</script>
+</body>
+</html>
