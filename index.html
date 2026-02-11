@@ -7,20 +7,63 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#ff4d6d,#ffb3c6,#fff);color:#fff;overflow:hidden}
-.page{display:none;height:100vh;justify-content:center;align-items:center;text-align:center;flex-direction:column;padding:20px;animation:fade 0.8s}
+body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#ff4d6d,#ffb3c6,#fff);color:#000;overflow:hidden}
+.page{display:none;height:100vh;justify-content:center;align-items:center;text-align:center;flex-direction:column;padding:20px;animation:fade 0.8s;position: relative;}
 .page.active{display:flex}
 h1{font-family:'Great Vibes',cursive;font-size:3.2rem;margin-bottom:20px}
 p{font-size:1.1rem;margin-bottom:20px;max-width:500px}
 .btn{padding:12px 30px;border-radius:30px;border:none;margin:10px;font-size:1rem;cursor:pointer}
-.yes{background:#fff;color:#ff4d6d}
-.no{background:#ff4d6d;color:#fff}
+.yes{background:#fff;color:#ff4d6d; transition: transform 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
+
+/* Updated No button styles for random movement */
+.no{
+    background:#ff4d6d;
+    color:#fff;
+    position: relative; 
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
 @keyframes fade{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
-.heart{position:absolute;width:20px;height:20px;background:pink;transform:rotate(45deg);animation:float 6s linear infinite;opacity:0.8}
+.heart{position:absolute;width:20px;height:20px;background:pink;transform:rotate(45deg);animation:float 6s linear infinite;opacity:0.8; z-index: -1;}
 .heart::before,.heart::after{content:"";position:absolute;width:20px;height:20px;background:pink;border-radius:50%}
 .heart::before{top:-10px;left:0}.heart::after{left:-10px;top:0}
 @keyframes float{0%{transform:translateY(100vh) rotate(45deg)}100%{transform:translateY(-10vh) rotate(45deg);opacity:0}}
-.option{background:#fff;color:#ff4d6d;padding:10px 20px;border-radius:20px;margin:8px;cursor:pointer}
+
+.option{background:#fff;color:#ff4d6d;padding:10px 20px;border-radius:20px;margin:8px;cursor:pointer; border: 1px solid #ffb3c6;}
+
+/* Image Holder Styles */
+.photo-holder {
+    position: absolute;
+    top: 30px;
+    width: 40%;
+    height: 32%;
+    border: 3px dashed #ff4d6d;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+}
+.photo-holder span {
+    font-size: 0.8rem;
+    color: #ff4d6d;
+    padding: 10px;
+}
+.photo-holder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+    width: 100%;
+}
 </style>
 </head>
 <body>
@@ -28,8 +71,10 @@ p{font-size:1.1rem;margin-bottom:20px;max-width:500px}
 <!-- PAGE 1 -->
 <div class="page active" id="p1">
 <h1>Will you be mine? 💖</h1>
-<button class="btn yes" id="yesBtn" onclick="go('p2')">Yes 💖</button>
-<button class="btn no" id="noBtn" onclick="noClick()">No 💔</button>
+<div class="btn-group">
+    <button class="btn yes" id="yesBtn" onclick="go('p2')">Yes 💖</button>
+    <button class="btn no" id="noBtn" onmouseover="moveButton()" onclick="moveButton()">No 💔</button>
+</div>
 </div>
 
 <!-- THINK AGAIN -->
@@ -42,6 +87,7 @@ p{font-size:1.1rem;margin-bottom:20px;max-width:500px}
 <div class="page" id="p2">
 <h1>Happy Valentine Baby 💖</h1>
 <p>You make my world brighter, warmer, and full of love.</p>
+<p>You are my princess and I want to see you always happy.</p>
 <button class="btn yes" onclick="go('p3')">See Your Gifts 🎁</button>
 </div>
 
@@ -70,8 +116,11 @@ p{font-size:1.1rem;margin-bottom:20px;max-width:500px}
 
 <!-- LETTER -->
 <div class="page" id="letter">
+<!-- Add her image inside the img tag below when ready -->
+
+
 <h1 style="font-family:'Great Vibes',cursive;">My Love Letter 💌</h1>
-<p style="font-family:'Great Vibes',cursive;font-size:1.4rem;line-height:1.8;">
+<p style="font-family:'Great Vibes',cursive;font-size:1.4rem;line-height:1.8; color:black;">
 My dearest love,<br><br>
 Every moment with you feels like a gentle melody that plays in my heart.<br>
 You are my laughter in the quiet, my comfort in the storm, and my dream in every sunrise.<br>
@@ -85,6 +134,10 @@ Always yours 💖
 
 <!-- PROMISE -->
 <div class="page" id="promise">
+<div class="photo-holder">
+    <img src="" onerror="this.style.display='none'" />
+    <span>Add Her Photo Here</span>
+</div>    
 <h1>Always stay with me 💖</h1>
 <h1>I love you forever 💞</h1>
 <button class="btn yes" onclick="go('p3')">Back</button>
@@ -92,24 +145,43 @@ Always yours 💖
 
 <script>
 let noCount = 0;
+
 function go(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-}
-
-function noClick() {
-  noCount++;
-  if (noCount === 1) go('think');
-  if (noCount === 2) document.getElementById('yesBtn').style.transform = 'scale(1.3)';
-  if (noCount >= 3) {
-    document.getElementById('noBtn').style.display = 'none';
-    document.getElementById('yesBtn').style.transform = 'scale(1.6)';
+  
+  if(id === 'p1') {
+      const noBtn = document.getElementById('noBtn');
+      noBtn.style.position = 'relative';
+      noBtn.style.left = '0px';
+      noBtn.style.top = '0px';
   }
 }
 
+function moveButton() {
+    noCount++;
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+
+    noBtn.style.position = 'absolute';
+
+    const padding = 50;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+    const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+    const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+    noBtn.style.left = randomX + 'px';
+    noBtn.style.top = randomY + 'px';
+
+    const scale = 1 + (noCount * 0.15);
+    yesBtn.style.transform = `scale(${scale})`;
+}
+
 const quiz = [
-  { q: 'Who is boss in relationship?', a: ['Me', 'My Mom', 'Obviously You'], c: 2 },
-  { q: 'Who fights a lot in relationship?', a: ['Always You', 'No One', 'Me'], c: 2 },
+  { q: 'Who is boss in relationship?', a: ['Me', 'you', 'us'], c: 2 },
+  { q: 'When we meet?', a: ['04/08', '14/08', '09/05'], c: 2 },
   { q: 'Where do I plan to spend rest of my life?', a: ['Paris', 'In Your Heart', 'On Mars'], c: 1 }
 ];
 
@@ -153,7 +225,6 @@ function loadQ() {
   });
 }
 
-// override Gift 1 button safely after DOM load
 window.addEventListener('DOMContentLoaded', () => {
   const gift1Btn = document.querySelector("button[onclick=\"go('quiz')\"]");
   if (gift1Btn) {
@@ -161,7 +232,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// floating hearts
 setInterval(() => {
   const h = document.createElement('div');
   h.className = 'heart';
